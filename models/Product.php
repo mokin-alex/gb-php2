@@ -1,14 +1,16 @@
 <?php
-namespace models;
+namespace app\models;
 
 
 class Product extends Model
 {
-    protected $id;
+    private $id;
     protected $name;
     protected $description;
     protected $price;
-    protected $category_id;
+    protected $imageData;
+    protected $imageType;
+    protected $viewers;
 
     public function getTableName(): string
     {
@@ -18,11 +20,6 @@ class Product extends Model
     public function getId()
     {
         return $this->id;
-    }
-
-    public function setId($id)
-    {
-        $this->id = $id;
     }
 
     public function getName()
@@ -54,16 +51,4 @@ class Product extends Model
     {
         $this->price = $price;
     }
-
-    public function getCategoryId():int
-    {
-        return $this->category_id;
-    }
-
-    public function setCategoryId($category_id)
-    {
-        $this->category_id = $category_id;
-        return $this;
-    }
-
 }

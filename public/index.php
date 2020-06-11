@@ -1,17 +1,22 @@
 <pre>
 <?php
+require $_SERVER['DOCUMENT_ROOT'] . "/../config/main.php";
+require ROOT_DIR . "services/Autoloader.php";
 
-require $_SERVER['DOCUMENT_ROOT'] . "/../services/Autoloader.php";
+spl_autoload_register([new app\services\Autoloader(), 'loadClass']);
 
-spl_autoload_register([new \services\Autoloader(), 'loadClass']);
+//$product = new app\models\Product();
+//$product->setCategoryId(111)
+//        ->setDescription("test");
 
-$product = new \models\Product();
-$product->setCategoryId(111)
-    ->setDescription("test");
+//var_dump($product->getById('10'));
 
-function foo(\interfaces\ModelInterface $object){
-    var_dump($object->getById());
-}
-
-var_dump($product);
-$order= new \models\Order();
+//var_dump($product);
+//$order= new \models\Order();
+$user = new app\models\User();
+//$user->setLogin("petrovaa");
+//$user->setPassword("test");
+//$user->setFistName('Alexandr')->setSecondName("Petrov");
+//$user->setIsAdm(false);
+var_dump($user->getById(3));
+//var_dump($user->insert()->errorInfo());

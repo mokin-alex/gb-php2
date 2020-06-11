@@ -1,7 +1,7 @@
 <?php
-namespace models;
-use interfaces\ModelInterface;
-use interfaces\OrderInterface;
+namespace app\models;
+use app\interfaces\ModelInterface;
+use app\interfaces\OrderInterface;
 
 class Order extends Model implements ModelInterface, OrderInterface
 {
@@ -13,13 +13,13 @@ class Order extends Model implements ModelInterface, OrderInterface
 
     public function getTableName(): string
     {
-        return "order";
+        return "orders";
     }
 
     public function getProductsInOrder(): array
     {
         //$sql = "SELECT * FROM order_product WHERE order_id = {$this->id}";
-        $sql = "SELECT * FROM {$this::ORDER_PRODUCT} WHERE order_id = {$this->id}";
+        $sql = "SELECT * FROM {$this::TABLE_WITH_PRODUCTS_OF_ORDER} WHERE order_id = {$this->id}";
         return $this->db->queryAll($sql);
     }
 

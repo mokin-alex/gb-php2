@@ -1,14 +1,14 @@
 <?php
 
 
-namespace interfaces;
+namespace app\interfaces;
 
 
-use models\ProductQnt;
+use app\models\ProductQnt;
 
 interface OrderInterface
 {
-    const ORDER_PRODUCT = "order_product";
+    const TABLE_WITH_PRODUCTS_OF_ORDER = "order_products";
     public function getProductsInOrder(): array;
     public function addProductInOrder(ProductQnt $productQnt);
     public function removeProductInOrder(ProductQnt $productQnt);
