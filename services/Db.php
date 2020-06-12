@@ -1,5 +1,7 @@
 <?php
+
 namespace app\services;
+
 use app\models\Model;
 use app\traits\TSingleton;
 
@@ -33,21 +35,20 @@ class Db
             $this->connection->setAttribute(
                 \PDO::ATTR_DEFAULT_FETCH_MODE,
                 \PDO::FETCH_ASSOC
-             //   \PDO::FETCH_INTO
             );
         }
 
         return $this->connection;
     }
 
-    private function query(string $sql, array $params = []) {
+    private function query(string $sql, array $params = [])
+    {
         $pdoStatement = $this->getConnection()->prepare($sql);
-     //   $pdoStatement::setFetchMode ( \PDO::FETCH_INTO, $obj );
         $pdoStatement->execute($params);
         return $pdoStatement;
     }
 
-    public function update(string $sql, array $params = [])
+    public function execute(string $sql, array $params = [])
     {
         return $this->query($sql, $params)->rowCount();
     }
@@ -58,18 +59,20 @@ class Db
         return $this->getConnection()->lastInsertId();
     }
 
-    public function queryOne(string $sql, array $params = [])
+    public function queryOne(string $sql, array $params = [], $classname)
     {
-        //return $this->queryAll($sql, $params)[0];
-        $obj = $this->query($sql, $params)->fetch(\PDO::FETCH_OBJ);
-        var_dump($obj);
-        return [];
-        //return $array[$obj];
+        return $this->queryAll($sql, $params, $classname)[0];
     }
 
-    public function queryAll(string $sql, array $params = [])
+    public function queryAll(string $sql, array $params = [], $classname)
     {
-        return $this->query($sql, $params)->fetchAll();
+        $queryCollection = [];
+        $pdoStatement = $this->query($sql, $params);
+        while ($queryItem = $pdoStatement->fetchObject($classname)) {
+            $queryCollection[] = $queryItem;
+        }
+        return $queryCollection;
+        //return $this->query($sql, $params)->fetchAll();
     }
 
     private function buildDsnString()

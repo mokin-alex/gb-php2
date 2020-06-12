@@ -18,5 +18,6 @@ $user = new app\models\User();
 //$user->setPassword("test");
 //$user->setFistName('Alexandr')->setSecondName("Petrov");
 //$user->setIsAdm(false);
-var_dump($user->getById(3));
+//var_dump($user->getById(3));
+var_dump($user->getAll());
 //var_dump($user->insert()->errorInfo());

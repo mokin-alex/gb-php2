@@ -1,11 +1,12 @@
 <?php
+
 namespace app\interfaces;
 
 interface ModelInterface
 {
-    public function getById(int $id): array;
+    public function getById(int $id);
 
-    public function getALl();
+    public function getALl(): array;
 
     public function getTableName(): string;
 
