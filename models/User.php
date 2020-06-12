@@ -28,8 +28,14 @@ class User extends Model
     {
          $sql = "UPDATE {$this->tableName} 
             SET login = :login, password = :password, FistName = :FistName, SecondName = :SecondName, isAdm = :isAdm
-            WHERE id={$this->id}";
+            WHERE id = {$this->id}";
         return $this->db->execute($sql, $this->getParams());
+    }
+
+    public function delete()
+    {
+        $sql = "DELETE FROM {$this->tableName} WHERE id = {$this->id}";
+        return $this->db->execute($sql);
     }
 
     public function getId($id)

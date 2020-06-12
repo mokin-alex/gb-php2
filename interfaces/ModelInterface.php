@@ -10,4 +10,7 @@ interface ModelInterface
 
     public function getTableName(): string;
 
+    public function update();
+    public function insert();
+    public function delete();
 }

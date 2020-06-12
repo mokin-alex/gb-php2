@@ -2,7 +2,6 @@
 namespace app\models;
 use app\interfaces\ModelInterface;
 use app\services\Db;
-use mysql_xdevapi\DatabaseObject;
 
 abstract class Model implements ModelInterface
 {
@@ -28,8 +27,5 @@ abstract class Model implements ModelInterface
         $sql = "SELECT * FROM {$this->tableName}";
         return $this->db->queryAll($sql, [], $this->classname);
     }
-
-    abstract function update();
-    abstract function insert();
 
 }

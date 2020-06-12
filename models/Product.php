@@ -17,6 +17,19 @@ class Product extends Model
         return "products";
     }
 
+    public function insert()
+    {
+        // TODO: Implement insert() method.
+    }
+    public function update()
+    {
+        // TODO: Implement update() method.
+    }
+    public function delete()
+    {
+        // TODO: Implement delete() method.
+    }
+
     public function getId()
     {
         return $this->id;
