@@ -4,13 +4,13 @@ namespace app\models;
 
 class Product extends Model
 {
-    private $id;
-    protected $name;
-    protected $description;
-    protected $price;
-    protected $imageData;
-    protected $imageType;
-    protected $viewers;
+    public $id;
+    public $name;
+    public $description;
+    public $price;
+    public $imageData;
+    public $imageType;
+    public $viewers;
 
     public function getTableName(): string
     {
