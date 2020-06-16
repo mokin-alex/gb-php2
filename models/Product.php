@@ -1,10 +1,11 @@
 <?php
+
 namespace app\models;
 
 
-class Product extends Model
+class Product extends Record
 {
-    public $id;
+    //public $id;
     public $name;
     public $description;
     public $price;
@@ -17,17 +18,16 @@ class Product extends Model
         return "products";
     }
 
-    public function insert()
+    public function __construct($id = null, $name = null, $description = null, $price = null, $imageData = null, $imageType = null, $viewers = 0)
     {
-        // TODO: Implement insert() method.
-    }
-    public function update()
-    {
-        // TODO: Implement update() method.
-    }
-    public function delete()
-    {
-        // TODO: Implement delete() method.
+        parent::__construct();
+        $this->id = $id;
+        $this->name = $name;
+        $this->description = $description;
+        $this->price = $price;
+        $this->imageData = $imageData;
+        $this->imageType = $imageType;
+        $this->viewers = $viewers;
     }
 
     public function getId()
@@ -64,4 +64,53 @@ class Product extends Model
     {
         $this->price = $price;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getImageData()
+    {
+        return $this->imageData;
+    }
+
+    /**
+     * @param mixed $imageData
+     */
+    public function setImageData($imageData): void
+    {
+        $this->imageData = $imageData;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImageType()
+    {
+        return $this->imageType;
+    }
+
+    /**
+     * @param mixed $imageType
+     */
+    public function setImageType($imageType): void
+    {
+        $this->imageType = $imageType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getViewers()
+    {
+        return $this->viewers;
+    }
+
+    /**
+     * @param mixed $viewers
+     */
+    public function setViewers($viewers): void
+    {
+        $this->viewers = $viewers;
+    }
+
 }

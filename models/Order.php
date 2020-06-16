@@ -2,10 +2,10 @@
 
 namespace app\models;
 
-use app\interfaces\ModelInterface;
+use app\interfaces\RecordInterface;
 use app\interfaces\OrderInterface;
 
-class Order extends Model implements ModelInterface, OrderInterface
+class Order extends Record implements RecordInterface, OrderInterface
 {
     protected $id;
     protected $date;

@@ -4,7 +4,9 @@
 namespace app\controllers;
 
 
+use app\models\Product;
 use app\models\RenderToLayout;
+
 use app\traits\TController;
 
 class CartController
@@ -12,6 +14,7 @@ class CartController
     use TController;
     public function actionIndex()
     {
+        session_start();
         if (isset($_SESSION['user_name'])) {
             $userName = $_SESSION['user_name'];
         } else {
@@ -35,6 +38,21 @@ class CartController
         }
         $justRendered = new RenderToLayout('view_cart', ['cart' => $cart, 'cartInfo' => $cartInfo]);
         echo $justRendered->getContent();
-        //echo render('view_cart', ['cart' => $cart, 'cartInfo' => $cartInfo]);
+    }
+
+    public function actionRemove()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            session_start();
+            if (isset($_POST['remove'])) { //Удалить один или несколько продуктов из массива(в сессии)
+                foreach ($_POST['product_item'] as $product_line) {
+                    unset($_SESSION['cart'][$product_line]);
+                }
+            }
+            if (isset($_POST['removeAll'])) { //Очистить корзину
+                unset($_SESSION['cart']);
+            }
+            $this->redirect('?c=cart');
+        }
     }
 }

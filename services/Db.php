@@ -52,26 +52,28 @@ class Db
         return $this->query($sql, $params)->rowCount();
     }
 
-    public function insert(string $sql, array $params = [])
+    public function getLastInsertId()
     {
-        $this->query($sql, $params);
         return $this->getConnection()->lastInsertId();
     }
 
-    public function queryOne(string $sql, array $params = [], $classname)
+    public function queryOne(string $classname, string $sql, array $params = [])
     {
-        return $this->queryAll($sql, $params, $classname)[0];
+        return $this->queryAll($classname, $sql, $params)[0];
     }
 
-    public function queryAll(string $sql, array $params = [], $classname)
+    public function queryAll(string $classname, string $sql, array $params = [])
     {
+        //var_dump($classname);exit;
         $queryCollection = [];
         $pdoStatement = $this->query($sql, $params);
-        while ($queryItem = $pdoStatement->fetchObject($classname)) {
-            $queryCollection[] = $queryItem;
-        }
-        return $queryCollection;
-        //return $this->query($sql, $params)->fetchAll();
+        $pdoStatement->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $classname);
+//        while ($queryItem = $pdoStatement->fetchObject($classname)) {
+//            $queryCollection[] = $queryItem;
+//        }
+//        var_dump($queryCollection);
+//        return $queryCollection;
+        return $this->query($sql, $params)->fetchAll();
     }
 
     private function buildDsnString()

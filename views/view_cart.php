@@ -1,6 +1,6 @@
 <h1><?= $cartInfo ?></h1>
 <div class="cart">
-    <form action="/cart/remove" method="post" class="form">
+    <form action="?c=cart&a=remove" method="post" class="form">
         <?php foreach ($cart as $products => $items): ?>
             <?php
             echo '<img class="cart_img" src="data:' . $items['imageType'] . ';base64,' . base64_encode($items['imageData']) . '"/>';
@@ -16,10 +16,10 @@
     </form>
 </div>
 <div >
-    <a href="/order/add">
+    <a href="?c=order&a=add">
         <button class="btn-cart_invert" type="button">Оформить заказ</button>
     </a>
-    <a href="/order">
+    <a href="?c=order">
         <button class="btn-cart_invert" type="button">Просмотр заказов</button>
     </a>
 </div>

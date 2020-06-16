@@ -2,7 +2,7 @@
 
 namespace app\models;
 
-class User extends Model
+class User extends Record
 {
     private $id;
     private $login;
