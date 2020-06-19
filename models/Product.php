@@ -5,7 +5,7 @@ namespace app\models;
 
 class Product extends Record
 {
-    //public $id;
+    public $id;
     public $name;
     public $description;
     public $price;
@@ -113,4 +113,8 @@ class Product extends Record
         $this->viewers = $viewers;
     }
 
+    public function getComments()
+    {
+        return []; //TODO: получение коментариев по конкретному товару
+    }
 }

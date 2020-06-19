@@ -4,7 +4,7 @@
 namespace app\models;
 
 
-class RenderToLayout extends Render
+class RenderToLayout extends TemplateRender
 {
     protected $layout = 'main';
     public function __construct(string $template, array $params = [])

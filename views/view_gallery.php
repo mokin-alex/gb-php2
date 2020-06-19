@@ -2,7 +2,7 @@
 <div class="gallery">
     <?php foreach ($modelCollection as $model): ?>
         <div class="gallery_block">
-            <p class="gallery_txt"><?= $model->name ?></p>
+            <p class="gallery_txt"><?= $model->getName() ?></p>
             <?php
             echo '<a href="?c=product&a=card&id=' . $model->id . '" target="_blank">
       <img width=300 src="data:' . $model->imageType . ';base64,' . base64_encode($model->imageData) . '"/></a>';

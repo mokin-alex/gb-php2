@@ -4,7 +4,7 @@
 namespace app\models;
 
 
-class RenderTo extends Render
+class RenderTo extends TemplateRender
 {
 
 }

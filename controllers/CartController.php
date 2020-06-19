@@ -1,58 +1,48 @@
 <?php
 
-
 namespace app\controllers;
 
-
+use app\models\Cart;
 use app\models\Product;
-use app\models\RenderToLayout;
+use app\services\Request;
 
-use app\traits\TController;
-
-class CartController
+class CartController extends Controller
 {
-    use TController;
+
     public function actionIndex()
     {
-        session_start();
-        if (isset($_SESSION['user_name'])) {
-            $userName = $_SESSION['user_name'];
+
+        if ($this->session->isSet('user_name')) {
+            $userName = $this->session->get('user_name');
         } else {
             $userName = "Посетитель";
         }
-        if (!isset($_SESSION['cart'])) {
-            $_SESSION['cart'] = [];
-        }
-        if (empty($_SESSION['cart'])) {
+
+        $cart = (new Cart())->getCartContent();
+        if (empty($cart)) {
             $cartInfo = $userName . ", ваша корзина пуста";
         } else {
-            $cartInfo = $userName . ", сейчас в корзине:";
+            $cartInfo = $userName . ", офрмите заказ";
         }
-
-        $cart = $_SESSION['cart']; //получим текущее состояние корзины из сессии
-        //Для вывода на экран добавим в массив Корзины  фото, взяв его из базы по id продукта:
         foreach ($cart as $prod => $itm) {
             $product = (new Product())->getById($itm['id']);
             $cart[$prod]['imageType'] = $product->imageType;
             $cart[$prod]['imageData'] = $product->imageData;
         }
-        $justRendered = new RenderToLayout('view_cart', ['cart' => $cart, 'cartInfo' => $cartInfo]);
-        echo $justRendered->getContent();
+        echo $this->render('view_cart', ['cart' => $cart, 'cartInfo' => $cartInfo]);
     }
 
     public function actionRemove()
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            session_start();
-            if (isset($_POST['remove'])) { //Удалить один или несколько продуктов из массива(в сессии)
-                foreach ($_POST['product_item'] as $product_line) {
-                    unset($_SESSION['cart'][$product_line]);
-                }
+        if (Request::isPost()) {
+            $cart = new Cart();
+            if (Request::isSet('remove')) { //Удалить один или несколько продуктов из массива(в сессии)
+                $cart->remove(Request::dirtyPost('product_item'));
             }
-            if (isset($_POST['removeAll'])) { //Очистить корзину
-                unset($_SESSION['cart']);
+            if (Request::isSet('removeAll')) { //Очистить корзину
+                $cart->clear();
             }
-            $this->redirect('?c=cart');
         }
+        $this->redirect('?c=cart');
     }
 }

@@ -64,16 +64,15 @@ class Db
 
     public function queryAll(string $classname, string $sql, array $params = [])
     {
-        //var_dump($classname);exit;
-        $queryCollection = [];
+        //$queryCollection = [];
         $pdoStatement = $this->query($sql, $params);
         $pdoStatement->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $classname);
+        return $pdoStatement->fetchAll();
 //        while ($queryItem = $pdoStatement->fetchObject($classname)) {
 //            $queryCollection[] = $queryItem;
 //        }
-//        var_dump($queryCollection);
 //        return $queryCollection;
-        return $this->query($sql, $params)->fetchAll();
+
     }
 
     private function buildDsnString()

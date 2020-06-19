@@ -12,7 +12,7 @@ $controllerClass = "app\controllers\\" . ucfirst($controllerName) . "Controller"
 
 if(class_exists($controllerClass)) {
     /** @var \app\controllers\ProductController $controller */
-    $controller = new $controllerClass;
+    $controller = new $controllerClass (new \app\services\renderers\TemplateRenderer());
     $controller->runAction($actionName);
 }
 
