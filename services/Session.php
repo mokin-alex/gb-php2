@@ -21,7 +21,7 @@ class Session
         return $_SESSION[$key];
     }
 
-    public function doUnset($key)
+    public function clear($key)
     {
         unset($_SESSION[$key]);
     }
@@ -29,5 +29,10 @@ class Session
     public function isSet($key)
     {
         return isset($_SESSION[$key]);
+    }
+
+    public function close()
+    {
+        $_SESSION = [];
     }
 }

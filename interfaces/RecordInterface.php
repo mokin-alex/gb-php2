@@ -4,11 +4,11 @@ namespace app\interfaces;
 
 interface RecordInterface
 {
-    public function getById(int $id);
+    public static function getById(int $id);
 
-    public function getAll(): array;
+    public static function getAll(): array;
 
-    public function getTableName(): string;
+    public static function getTableName(): string;
 
     public function update();
     public function insert();

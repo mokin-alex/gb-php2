@@ -16,7 +16,7 @@ abstract class Record implements RecordInterface
     public function __construct()
     {
         $this->db = Db::getInstance();
-        $this->tableName = $this->getTableName();
+        $this->tableName = static::getTableName();
         $this->classname = get_class($this);
         $this->setPropsExclusion();
     }
@@ -26,16 +26,18 @@ abstract class Record implements RecordInterface
         $this->propsExclusion = ['id', 'db','tableName', 'classname', 'propsExclusion'];
     }
 
-    public function getById(int $id)
+    public static function getById(int $id)
     {
-        $sql = "SELECT * FROM {$this->tableName} WHERE id = :id";
-        return $this->db->queryOne($this->classname, $sql, [':id' => $id]);
+        $tableName = static::getTableName();
+        $sql = "SELECT * FROM {$tableName} WHERE id = :id";
+        return Db::getInstance()->queryOne(get_called_class(), $sql, [':id' => $id]);
     }
 
-    public function getAll(): array
+    public static function getAll(): array
     {
-        $sql = "SELECT * FROM {$this->tableName}";
-        return $this->db->queryAll($this->classname, $sql);
+        $tableName = static::getTableName();
+        $sql = "SELECT * FROM {$tableName}";
+        return Db::getInstance()->queryAll(get_called_class(), $sql);
 
     }
 

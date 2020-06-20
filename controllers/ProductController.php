@@ -14,14 +14,14 @@ class ProductController extends Controller
 
     public function actionIndex()
     {
-        $modelCollection = (new Product())->getAll();
+        $modelCollection = Product::getAll();
         echo $this->render('view_gallery', ['modelCollection' => $modelCollection]);
     }
 
     public function actionCard()
     {
         $id =(int) Request::cleanGet('id');
-        $model = (new Product())->getById($id);
+        $model = Product::getById($id);
         $listComments= $model->getComments();
         echo $this->render('view_product', ['model' => $model, 'listComments' => $listComments]);
     }

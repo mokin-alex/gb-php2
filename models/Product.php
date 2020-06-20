@@ -13,7 +13,7 @@ class Product extends Record
     public $imageType;
     public $viewers;
 
-    public function getTableName(): string
+    public static function getTableName(): string
     {
         return "products";
     }

@@ -14,7 +14,7 @@ class Comment extends Record implements \app\interfaces\RecordInterface
         $this->text = $text;
     }
 
-    public function getTableName(): string
+    public static function getTableName(): string
     {
         return "comments";
     }

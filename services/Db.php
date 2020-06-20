@@ -3,6 +3,7 @@
 namespace app\services;
 
 use app\traits\TSingleton;
+use PDO;
 
 class Db
 {
@@ -18,22 +19,22 @@ class Db
     ];
 
     /**
-     * @var \PDO
+     * @var PDO
      */
     private $connection = null;
 
     public function getConnection()
     {
         if (is_null($this->connection)) {
-            $this->connection = new \PDO(
+            $this->connection = new PDO(
                 $this->buildDsnString(),
                 $this->config['login'],
                 $this->config['password']
             );
 
             $this->connection->setAttribute(
-                \PDO::ATTR_DEFAULT_FETCH_MODE,
-                \PDO::FETCH_ASSOC
+                PDO::ATTR_DEFAULT_FETCH_MODE,
+                PDO::FETCH_ASSOC
             );
         }
 
@@ -66,7 +67,7 @@ class Db
     {
         //$queryCollection = [];
         $pdoStatement = $this->query($sql, $params);
-        $pdoStatement->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $classname);
+        $pdoStatement->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, $classname);
         return $pdoStatement->fetchAll();
 //        while ($queryItem = $pdoStatement->fetchObject($classname)) {
 //            $queryCollection[] = $queryItem;

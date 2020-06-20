@@ -8,10 +8,8 @@ use app\services\Request;
 
 class CartController extends Controller
 {
-
     public function actionIndex()
     {
-
         if ($this->session->isSet('user_name')) {
             $userName = $this->session->get('user_name');
         } else {
@@ -25,7 +23,7 @@ class CartController extends Controller
             $cartInfo = $userName . ", офрмите заказ";
         }
         foreach ($cart as $prod => $itm) {
-            $product = (new Product())->getById($itm['id']);
+            $product = Product::getById($itm['id']);
             $cart[$prod]['imageType'] = $product->imageType;
             $cart[$prod]['imageData'] = $product->imageData;
         }
@@ -43,6 +41,6 @@ class CartController extends Controller
                 $cart->clear();
             }
         }
-        $this->redirect('?c=cart');
+        $this->redirect('/?c=cart');
     }
 }
