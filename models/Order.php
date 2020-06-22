@@ -2,57 +2,39 @@
 
 namespace app\models;
 
-use app\interfaces\RecordInterface;
+use app\interfaces\IRecord;
 use app\interfaces\OrderInterface;
 
-class Order extends Record implements RecordInterface, OrderInterface
+class Order extends Record implements IRecord, OrderInterface
 {
-    protected $id;
-    protected $date;
-    protected $user_id;
-    protected $status;
-    protected $productsList = [];
+    //public $id;
+    public $date;
+    public $user_id;
+    public $status;
+    public $productsList = [];
 
+    public function __construct(int $user_id = null, int $status = null)
+    {
+        parent::__construct();
+        $this->user_id = $user_id;
+        $this->status = $status;
+    }
 
-    public function getTableName(): string
+    public static function getTableName(): string
     {
         return "orders";
     }
 
-    private function getParams(): array
+    public static function getOrdersByUser(int $user_id)
     {
-        return $params = [
-            ':user_id' => $this->user_id,
-            ':status' => $this->status,
-        ];
-    }
-
-    public function insert()
-    {
-        $sql = "INSERT INTO {$this->tableName} (user_id, status) 
-                VALUE (:user_id, :status)";
-        return $this->db->insert($sql, $this->getParams());
-    }
-
-    public function update()
-    {
-        $sql = "UPDATE {$this->tableName} 
-            SET user_id = :user_id, status = :status
-            WHERE id = {$this->id}";
-        return $this->db->insert($sql, $this->getParams());
-    }
-
-    public function delete()
-    {
-        $sql = "DELETE FROM {$this->tableName} WHERE id = {$this->id}";
-        return $this->db->execute($sql);
+        //TODO:
     }
 
     public function getProductsInOrder(): array
     {
         //TODO: тут запрос реализован не правильно - переделать
         $sql = "SELECT * FROM $this::TABLE_WITH_PRODUCTS_OF_ORDER WHERE order_id = {$this->id}";
-        return $this->db->queryAll($sql,[], 'app\models\ProductQnt');
+        return $this->db->queryAll($sql, [], 'app\models\ProductQnt');
     }
 
     public function addProductInOrder(ProductQnt $productQnt)
@@ -68,6 +50,7 @@ class Order extends Record implements RecordInterface, OrderInterface
 
     public function setStatus($status)
     {
+        $this->setPropsIsUpdated('status');
         $this->status = $status;
     }
 
@@ -76,6 +59,7 @@ class Order extends Record implements RecordInterface, OrderInterface
      */
     public function setUserId($user_id): void
     {
+        $this->setPropsIsUpdated('user_id');
         $this->user_id = $user_id;
     }
 }

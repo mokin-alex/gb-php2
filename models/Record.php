@@ -2,16 +2,17 @@
 
 namespace app\models;
 
-use app\interfaces\RecordInterface;
+use app\interfaces\IRecord;
 use app\services\Db;
 
-abstract class Record implements RecordInterface
+abstract class Record implements IRecord
 {
     protected $tableName;
     protected $db = null;
     protected $classname;
     public $id;
-    protected $propsExclusion;
+    protected $propsExclusion; //свойства-искючения для инсерта.
+    protected $propsIsUpdated = [];
 
     public function __construct()
     {
@@ -23,7 +24,12 @@ abstract class Record implements RecordInterface
 
     public function setPropsExclusion()
     {
-        $this->propsExclusion = ['id', 'db','tableName', 'classname', 'propsExclusion'];
+        $this->propsExclusion = ['id', 'db', 'tableName', 'classname', 'propsExclusion', 'propsIsUpdated'];
+    }
+
+    protected function setPropsIsUpdated(string $propName)
+    {
+        $this->propsIsUpdated[] = $propName;
     }
 
     public static function getById(int $id)
@@ -38,7 +44,6 @@ abstract class Record implements RecordInterface
         $tableName = static::getTableName();
         $sql = "SELECT * FROM {$tableName}";
         return Db::getInstance()->queryAll(get_called_class(), $sql);
-
     }
 
     public function insert()
@@ -48,7 +53,7 @@ abstract class Record implements RecordInterface
         $columns = [];
 
         foreach ($this as $key => $value) {
-            if(in_array($key, $this->propsExclusion)) {
+            if (in_array($key, $this->propsExclusion)) {
                 continue;
             }
 
@@ -66,7 +71,15 @@ abstract class Record implements RecordInterface
 
     public function update()
     {
-        // TODO: Implement update() method.
+        $params = [];
+        $placeholder = [];
+        foreach ($this->propsIsUpdated as $item => $prop) {
+            $params[":{$prop}"] = $this->{$prop};
+            $placeholder[] = "{$prop} = :{$prop}";
+        }
+        $placeholders = implode(", ", $placeholder);
+        $sql = "UPDATE {$this->tableName} SET {$placeholders} WHERE id = {$this->id}";
+        return $this->db->execute($sql, $params);
     }
 
     public function delete()

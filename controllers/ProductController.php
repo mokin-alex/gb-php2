@@ -72,6 +72,12 @@ class ProductController extends Controller
                 }
             $this->redirect('/?c=product&a=add');
         }
-        echo $this->render('view_add_product');
+
+        if ($this->currentUser && $this->currentUser->getIsAdm()) {
+            echo $this->render('view_add_product');
+        } else {
+            $this->redirect('/?c=auth&a=login');
+        }
+
     }
 }

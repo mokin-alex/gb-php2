@@ -42,6 +42,7 @@ class Product extends Record
 
     public function setName($name)
     {
+        $this->setPropsIsUpdated('name');
         $this->name = $name;
     }
 
@@ -52,6 +53,7 @@ class Product extends Record
 
     public function setDescription($description)
     {
+        $this->setPropsIsUpdated('description');
         $this->description = $description;
     }
 
@@ -62,6 +64,7 @@ class Product extends Record
 
     public function setPrice($price)
     {
+        $this->setPropsIsUpdated('price');
         $this->price = $price;
     }
 
@@ -78,6 +81,7 @@ class Product extends Record
      */
     public function setImageData($imageData): void
     {
+        $this->setPropsIsUpdated('imageData');
         $this->imageData = $imageData;
     }
 
@@ -94,6 +98,7 @@ class Product extends Record
      */
     public function setImageType($imageType): void
     {
+        $this->setPropsIsUpdated('imageType');
         $this->imageType = $imageType;
     }
 
@@ -110,6 +115,7 @@ class Product extends Record
      */
     public function setViewers($viewers): void
     {
+        $this->setPropsIsUpdated('viewers');
         $this->viewers = $viewers;
     }
 

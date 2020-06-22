@@ -2,7 +2,7 @@
 
 namespace app\interfaces;
 
-interface RecordInterface
+interface IRecord
 {
     public static function getById(int $id);
 

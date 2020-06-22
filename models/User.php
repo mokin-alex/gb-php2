@@ -35,27 +35,6 @@ class User extends Record
         return Db::getInstance()->queryOne(get_called_class(), $sql, [':login' => $login]);
     }
 
-    public function insert()
-    {
-
-        $sql = "INSERT INTO {$this->tableName} (login, password, FistName, SecondName, isAdm) 
-                VALUE (:login, :password, :FistName, :SecondName, :isAdm)";
-        return $this->db->insert($sql, $this->getParams());
-    }
-
-    public function update()
-    {
-         $sql = "UPDATE {$this->tableName} 
-            SET login = :login, password = :password, FistName = :FistName, SecondName = :SecondName, isAdm = :isAdm
-            WHERE id = {$this->id}";
-        return $this->db->execute($sql, $this->getParams());
-    }
-
-    public function delete()
-    {
-        $sql = "DELETE FROM {$this->tableName} WHERE id = {$this->id}";
-        return $this->db->execute($sql);
-    }
 
     public function getId()
     {
@@ -72,12 +51,14 @@ class User extends Record
 
     public function setLogin(string $login)
     {
+        $this->setPropsIsUpdated('login');
         $this->login = $login;
         return $this;
     }
 
     public function setPassword(string $password)
     {
+        $this->setPropsIsUpdated('password');
         $this->password = static::getHash($password);
         return $this;
     }
@@ -87,6 +68,7 @@ class User extends Record
      */
     public function setFirstName(string $firstName)
     {
+        $this->setPropsIsUpdated('fistName');
         $this->firstName = $firstName;
         return $this;
     }
@@ -104,6 +86,7 @@ class User extends Record
      */
     public function setSecondName(string $secondName)
     {
+        $this->setPropsIsUpdated('secondName');
         $this->secondName = $secondName;
         return $this;
     }
@@ -113,6 +96,7 @@ class User extends Record
      */
     public function setIsAdm(bool $isAdm)
     {
+        $this->setPropsIsUpdated('isAdm');
         $this->isAdm = (int) $isAdm;
         return $this;
     }
@@ -129,16 +113,5 @@ class User extends Record
     {
         $silk = "s18m11";
         return md5($string . $silk);
-    }
-
-    private function getParams():array
-    {
-        return $params = [
-            ':login' => $this->login,
-            ':password' => $this->password,
-            ':FistName' => $this->firstName,
-            ':SecondName' => $this->secondName,
-            ':isAdm' => $this->isAdm,
-        ];
     }
 }
