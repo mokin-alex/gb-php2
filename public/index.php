@@ -7,7 +7,8 @@ spl_autoload_register([new app\services\Autoloader(), 'loadClass']);
 //$product = \app\models\Product::getById(8);
 //$product->setName('test');
 //$product->setDescription('testtest');
-//var_dump($product->getPropsIsUpdated());
+////var_dump($product->getPropsIsUpdated());
+//$product->setName('test2222');
 //var_dump($product->update());
 //exit;
 

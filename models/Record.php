@@ -29,7 +29,9 @@ abstract class Record implements IRecord
 
     protected function setPropsIsUpdated(string $propName)
     {
-        $this->propsIsUpdated[] = $propName;
+        $prepare = $this->propsIsUpdated;
+        $prepare[] = $propName; //добавим имя свойства
+        $this->propsIsUpdated = array_unique($prepare); //исключим повторяющиеся имена свойств.
     }
 
     public static function getById(int $id)
@@ -79,6 +81,7 @@ abstract class Record implements IRecord
         }
         $placeholders = implode(", ", $placeholder);
         $sql = "UPDATE {$this->tableName} SET {$placeholders} WHERE id = {$this->id}";
+        $this->propsIsUpdated = []; //очистим для следующего апдейта.
         return $this->db->execute($sql, $params);
     }
 
