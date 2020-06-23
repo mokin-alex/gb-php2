@@ -10,8 +10,8 @@ class CartController extends Controller
 {
     public function actionIndex()
     {
-        if ($this->session->isSet('user_name')) {
-            $userName = $this->session->get('user_name');
+        if ($this->currentUser)  {
+            $userName = $this->currentUser->getFirstName();
         } else {
             $userName = "Посетитель";
         }
