@@ -1,0 +1,15 @@
+{
+  "name": "vendor_name/gb-php2",
+  "description": "description",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Alex",
+      "email": "mr.aleksay@gmail.com"
+    }
+  ],
+  "require": {
+    
+  }
+}
