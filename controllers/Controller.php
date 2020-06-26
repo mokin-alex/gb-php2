@@ -3,8 +3,7 @@
 namespace app\controllers;
 
 use app\interfaces\IRender;
-use app\models\User;
-use app\services\Request;
+use app\models\repositories\UserRepository;
 use app\services\Session;
 
 abstract class Controller
@@ -55,7 +54,7 @@ abstract class Controller
     {
         if ($this->session->isSet('user_id')) {
             $user_id = $this->session->get('user_id');
-            return User::getById($user_id);
+            return (new UserRepository())->getById($user_id);
         } else {
             return false;
         }

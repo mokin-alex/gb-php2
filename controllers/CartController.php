@@ -3,7 +3,7 @@
 namespace app\controllers;
 
 use app\models\Cart;
-use app\models\Product;
+use app\models\repositories\ProductRepository;
 use app\services\Request;
 
 class CartController extends Controller
@@ -23,7 +23,7 @@ class CartController extends Controller
             $cartInfo = $userName . ", офрмите заказ";
         }
         foreach ($cart as $prod => $itm) {
-            $product = Product::getById($itm['id']);
+            $product = (new ProductRepository())->getById($itm['id']);
             $cart[$prod]['imageType'] = $product->imageType;
             $cart[$prod]['imageData'] = $product->imageData;
         }
@@ -32,15 +32,17 @@ class CartController extends Controller
 
     public function actionRemove()
     {
-        if (Request::isPost()) {
+        $request = new Request();
+
+        if ($request->isPost()) {
             $cart = new Cart();
-            if (Request::isSet('remove')) { //Удалить один или несколько продуктов из массива(в сессии)
-                $cart->remove(Request::dirtyPost('product_item'));
+            if ($request->isSet('remove')) { //Удалить один или несколько продуктов из массива(в сессии)
+                $cart->remove($request->dirtyPost('product_item'));
             }
-            if (Request::isSet('removeAll')) { //Очистить корзину
+            if ($request->isSet('removeAll')) { //Очистить корзину
                 $cart->clear();
             }
         }
-        $this->redirect('/?c=cart');
+        $this->redirect('/cart');
     }
 }

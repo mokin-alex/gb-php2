@@ -2,7 +2,6 @@
 
 namespace app\models;
 
-use app\services\Db;
 
 class User extends Record
 {
@@ -23,22 +22,24 @@ class User extends Record
         $this->secondName = $secondName;
     }
 
-    public static function getTableName(): string
-    {
-        return "users";
-    }
-
-    public static function getUserByLogin(string $login)
-    {
-        $tableName = static::getTableName();
-        $sql = "SELECT * FROM {$tableName} WHERE  login = :login";
-        return Db::getInstance()->queryOne(get_called_class(), $sql, [':login' => $login]);
-    }
-
-
     public function getId()
     {
         return $this->id;
+    }
+
+    public function setLogin(string $login)
+    {
+        $this->setPropsIsUpdated('login');
+        $this->login = $login;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLogin()
+    {
+        return $this->login;
     }
 
     /**
@@ -47,13 +48,6 @@ class User extends Record
     public function getPassword()
     {
         return $this->password;
-    }
-
-    public function setLogin(string $login)
-    {
-        $this->setPropsIsUpdated('login');
-        $this->login = $login;
-        return $this;
     }
 
     public function setPassword(string $password)

@@ -1,68 +1,82 @@
 <?php
 
-
 namespace app\controllers;
 
-
-use app\models\Order;
+use app\models\Cart;
+use app\models\OrderProducts;
+use app\models\repositories\OrderProductsRepository;
+use app\models\repositories\OrderRepository;
+use app\models\repositories\ViewOrderRepository;
 use app\services\Request;
 
 class OrderController extends Controller
 {
+    const ORDER_PAYED = 1;
+    const ORDER_DELIVERED = 2;
+    const ORDER_CLOSED = 3;
+    const ORDER_CANCEL = 9;
+
     public function actionIndex()
     {
         if ($this->currentUser) {
-            $orders = Order::getOrdersByUser((int)$this->currentUser->getId());
+            $orders = (new ViewOrderRepository())->getOrdersByUser((int)$this->currentUser->getId());
             echo $this->render('view_orders', ['orders' => $orders]);
         } else {
-            $this->redirect('/?c=auth&a=login');
+            $this->redirect('/auth/login');
         }
     }
 
     public function actionManage()
     {
         if ($this->currentUser && $this->currentUser->getIsAdm()) {
-            $orders = Order::getAll();
+            $orders = (new ViewOrderRepository())->getOrdersAllUsers();
             echo $this->render('view_orders_adm', ['orders' => $orders]);
         } else {
-            $this->redirect('/?c=auth&a=login');
+            $this->redirect('/auth/login');
         }
     }
 
     public function actionAdd()
     {
-        if (!$this->currentUser) $this->redirect('/?c=auth&a=login');
-        //TODO: доделать добавление заказа
-        //
-        $this->redirect('/?c=order');
+        if (!$this->currentUser) $this->redirect('/auth/login');
+        $order = new Order();
+        (new OrderRepository())->save($order);
+        $cart = (new Cart())->getCartContent();
+        foreach ($cart as $prod => $itm) {
+            $orderProduct = new OrderProducts();
+            $orderProduct->setOrderId($order->getId());
+            $orderProduct->setProductId($cart[$prod]['id']);
+            $orderProduct->setQuantity($cart[$prod]['quantity']);
+            (new OrderProductsRepository())->save($orderProduct);
+        }
+        $this->redirect('/order');
     }
 
     public function actionUpdate()
     {
-        if (!$this->currentUser) $this->redirect('/?c=auth&a=login');
+        if (!$this->currentUser) $this->redirect('/auth/login');
+        $request = new Request();
+        if ($request->isPost()) {
+            $orderIds = $request->dirtyPost('order_item');
 
-        if (Request::isPost()) {
-            $orderIds = Request::dirtyPost('order_item');
-
-            //TODO: доделать изменение статуса заказов
             if ($this->session->isSet('pay')) {
-                //TODO: setOrderStatus($orderIds, ORDER_PAYED); //Оплачен заказ
+                (new OrderRepository())->setOrderStatus($orderIds, ORDER_PAYED); //Оплачен заказ
             }
             if ($this->session->isSet('cancel')) {
-                //TODO: setOrderStatus($orderIds, ORDER_CANCEL); //отмена заказа
+                (new OrderRepository())->setOrderStatus($orderIds, ORDER_CANCEL); //отмена заказа
             }
             if ($this->session->isSet('close')) {
-                //TODO:setOrderStatus($orderIds, ORDER_CLOSED); //закрыть заказ как законченный
+                (new OrderRepository())->setOrderStatus($orderIds, ORDER_CLOSED); //закрыть заказ как законченный
             }
             if ($this->session->isSet('delivery')) {
-                //TODO:setOrderStatus($orderIds, ORDER_DELIVERED); //заказ доставлен
+                (new OrderRepository())->setOrderStatus($orderIds, ORDER_DELIVERED); //заказ доставлен
             }
         }
 
         if ($this->currentUser && $this->currentUser->getIsAdm()) {
-            $this->redirect('/?c=order&a=manage');
+            $this->redirect('/order/manage');
         } else {
-            $this->redirect('/?c=order');
+            $this->redirect('/order');
         }
     }
 }

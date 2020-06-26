@@ -13,13 +13,13 @@
 <header>
     <div class="logo">Интернет-магазин</div>
     <div class="header_left">
-        <a href="/?c=product">
+        <a href="/product">
             <button class="btn-cart" type="button">Галерея</button>
         </a>
-        <a href="/?c=cart">
+        <a href="/cart">
             <button class="btn-cart" type="button">Корзина</button>
         </a>
-        <a href="?c=auth&a=login">
+        <a href="/auth/login">
             <button class="btn-cart" type="button">Вход</button>
         </a>
     </div>

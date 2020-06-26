@@ -1,5 +1,5 @@
 <h2>Добавить товар</h2>
-<form action="/?c:product&a=add" enctype="multipart/form-data" method="post" class="form">
+<form action="/product/add" enctype="multipart/form-data" method="post" class="form">
     <input type="file" name = 'my_file'>
     <p>Укажите автора</p>
     <input type="text" name = 'name' size="38">

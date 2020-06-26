@@ -6,6 +6,8 @@ namespace app\controllers;
 use app\models\Cart;
 use app\models\Comment;
 use app\models\Product;
+use app\models\repositories\CommentRepository;
+use app\models\repositories\ProductRepository;
 use app\services\LoadImageFile;
 use app\services\Request;
 
@@ -14,69 +16,72 @@ class ProductController extends Controller
 
     public function actionIndex()
     {
-        $modelCollection = Product::getAll();
+        $modelCollection = (new ProductRepository())->getAll();
         echo $this->render('view_gallery', ['modelCollection' => $modelCollection]);
     }
 
     public function actionCard()
     {
-        $id =(int) Request::cleanGet('id');
-        $model = Product::getById($id);
-        $listComments= $model->getComments();
+        $request = new Request();
+        $id = (int)$request->cleanGet('id');
+        $model = (new ProductRepository())->getById($id);
+        $listComments = (new CommentRepository())->getCommentsByProductId($model->getId());
         echo $this->render('view_product', ['model' => $model, 'listComments' => $listComments]);
     }
 
     public function actionBuy()
     {
-        $id =(int) Request::cleanGet('id');
-        if (Request::isPost()) {
-            $quantity = Request::cleanPost('quantity');
-            if ($quantity>0) {
+        $request = new Request();
+        $id = (int)$request->cleanGet('id');
+        if ($request->isPost()) {
+            $quantity = $request->cleanPost('quantity');
+            if ($quantity > 0) {
                 $cart = new Cart();
-                $cart->add(['id' =>$id, 'quantity' => $quantity]);
+                $cart->add(['id' => $id, 'quantity' => $quantity]);
             } else {
-                $this->redirect("/?c=product&a=card&id=$id");
+                $this->redirect("/product/card?id=$id");
             }
         }
-        $this->redirect("/?c=product");
+        $this->redirect("/product");
     }
 
     public function actionComment()
     {
         $minCommentLength = 3;
-
-        $id =(int) Request::cleanGet('id');
-        if (Request::isPost()) {
-            $comment = Request::cleanPost('comment');
+        $request = new Request();
+        $id = (int)$request->cleanGet('id');
+        if ($request->isPost()) {
+            $comment = $request->cleanPost('comment');
             if (strlen($comment) > $minCommentLength) {
                 $model = new Comment($id, $comment);
-                $model->save();
+                (new CommentRepository())->save($model);
             }
         }
-        $this->redirect("/?c=product&a=card&id=$id");
+        $this->redirect("/product/card?id=$id");
     }
 
     public function actionAdd()
     {
         //добавление нового товара
-        if (Request::isPost()) {
+        $request = new Request();
+        if ($request->isPost()) {
             $file = new LoadImageFile('my_file');
             if ($file->isReady) {
-                    $product = new Product();
-                    $product->setName(Request::cleanPost('name'));
-                    $product->setDescription(Request::cleanPost('description'));
-                    $product->setPrice(Request::dirtyPost('price'));
-                    $product->setImageData($file->getImageData());
-                    $product->setImageType($file->getImageType());
-                    $product->save();
-                }
-            $this->redirect('/?c=product&a=add');
+                $product = new Product();
+                $product->setName($request->cleanPost('name'));
+                $product->setDescription($request->cleanPost('description'));
+                $product->setPrice($request->dirtyPost('price'));
+                $product->setImageData($file->getImageData());
+                $product->setImageType($file->getImageType());
+                (new ProductRepository())->save($product);
+            }
+            $this->redirect('/product/add');
         }
 
         if ($this->currentUser && $this->currentUser->getIsAdm()) {
             echo $this->render('view_add_product');
         } else {
-            $this->redirect('/?c=auth&a=login');
+            $this->redirect('/auth/login');
         }
 
     }

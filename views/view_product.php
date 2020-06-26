@@ -9,7 +9,7 @@
         <p> <?= $model->description ?></p>
         <p>просмотров: <?= $model->viewers ?></p>
         <div class="product_bay">
-            <form action="/?c=product&a=buy&id=<?= $model->id ?>" method="post" class="form">
+            <form action="/product/buy?id=<?= $model->id ?>" method="post" class="form">
                 <input type="number" name="quantity" value="1">
                 <input type="submit" name="buy" value="Купить">
             </form>
@@ -17,7 +17,7 @@
     </div>
     <div class="comment">
         <h3>Оставьте отзыв:</h3>
-        <form action="/?c=product&a=comment&id=<?= $model->id ?>" method="post" class="form">
+        <form action="/product/comment?id=<?= $model->id ?>" method="post" class="form">
             <p><textarea name="comment" cols="40" rows="4"></textarea></p>
             <input type="submit" name="addComment">
         </form>
@@ -25,7 +25,7 @@
             <h3>Комментарии:</h3>
             <?php foreach ($listComments as $item): ?>
                 <div class="comments_block">
-                    <p>  <?= $item['text'] ?> </p>
+                    <p>  <?= $item->text ?> </p>
                 </div>
             <?php endforeach; ?>
         </div>

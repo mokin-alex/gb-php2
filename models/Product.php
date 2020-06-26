@@ -13,11 +13,6 @@ class Product extends Record
     public $imageType;
     public $viewers;
 
-    public static function getTableName(): string
-    {
-        return "products";
-    }
-
     public function __construct($id = null, $name = null, $description = null, $price = null, $imageData = null, $imageType = null, $viewers = 0)
     {
         parent::__construct();
@@ -119,8 +114,4 @@ class Product extends Record
         $this->viewers = $viewers;
     }
 
-    public function getComments()
-    {
-        return []; //TODO: получение коментариев по конкретному товару
-    }
 }

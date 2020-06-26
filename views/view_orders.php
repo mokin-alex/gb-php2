@@ -1,15 +1,15 @@
 <!----><h1><?= $orders_msg ?></h1>
 <h1>Ваши заказы</h1>
 <div class="order">
-    <form action="/?c=order&a=update" method="post" class="form">
+    <form action="/order/update" method="post" class="form">
         <?php foreach ($orders as $item): ?>
-            <input type="checkbox" name="order_item[]" value="<?= $item['id'] ?>" id="<?= $item['id'] ?>">
-            <label for="<?= $item['id'] ?>">ЗАКАЗ: <?= $item['id'] ?>
-                от <?= $item['date'] ?>;
-                Кол-во: <?= $item['product_quantity'] ?>
-                (копий: <?= $item['copies'] ?> экз.);
-                Сумма: $<?= $item['summa'] ?>;
-                 <?= $item['status'] ?>
+            <input type="checkbox" name="order_item[]" value="<?= $item->id ?>" id="<?= $item->id ?>">
+            <label for="<?= $item->id ?>">ЗАКАЗ: <?= $item->id ?>
+                от <?= $item->date ?>;
+                Кол-во: <?= $item->product_quantity ?>
+                (копий: <?= $item->copies ?> экз.);
+                Сумма: $<?= $item->summa ?>;
+                 <?= $item->status ?>
             </label>
             <br>
         <?php endforeach; ?>

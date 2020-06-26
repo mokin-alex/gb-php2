@@ -14,11 +14,6 @@ class Comment extends Record
         $this->text = $text;
     }
 
-    public static function getTableName(): string
-    {
-        return "comments";
-    }
-
     /**
      * @param int|null $product_id
      */
