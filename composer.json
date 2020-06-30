@@ -1,0 +1,20 @@
+{
+  "name": "vendor_name/gb-php2",
+  "description": "GB php2 homework",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Alex",
+      "email": "mr.aleksay@gmail.com"
+    }
+  ],
+  "require": {
+    
+  },
+  "autoload": {
+    "psr-4": {
+      "app\\" : "./"
+    }
+  }
+}
