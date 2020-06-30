@@ -6,7 +6,6 @@ namespace app\models\repositories;
 
 use app\models\Record;
 use app\models\User;
-use app\services\Db;
 
 class UserRepository extends Repository
 {
@@ -25,6 +24,6 @@ class UserRepository extends Repository
     {
         $tableName = static::getTableName();
         $sql = "SELECT * FROM {$tableName} WHERE  login = :login";
-        return Db::getInstance()->queryOne(static::getRecordClass(), $sql, [':login' => $login]);
+        return $this->db->queryOne(static::getRecordClass(), $sql, [':login' => $login]);
     }
 }

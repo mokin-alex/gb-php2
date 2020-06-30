@@ -2,6 +2,8 @@
 
 namespace app\models;
 
+use app\models\repositories\OrderProductsRepository;
+
 class Order extends Record
 {
     public $id;
@@ -9,7 +11,7 @@ class Order extends Record
     public $user_id;
     public $status;
 
-    public function __construct(int $id = null,  $date = null, int $user_id = null, int $status = null)
+    public function __construct(int $id = null,  $date = null, int $user_id = null, int $status = 0)
     {
         parent::__construct();
         $this->id = $id;
@@ -32,5 +34,16 @@ class Order extends Record
     {
         $this->setPropsIsUpdated('user_id');
         $this->user_id = $user_id;
+    }
+
+    public function addProductsToOrder(array $cart)
+    {
+        foreach ($cart as $prod => $itm) {
+            $orderProduct = new OrderProducts();
+            $orderProduct->setOrderId($this->id);
+            $orderProduct->setProductId($cart[$prod]['id']);
+            $orderProduct->setQuantity($cart[$prod]['quantity']);
+            (new OrderProductsRepository())->save($orderProduct);
+        }
     }
 }

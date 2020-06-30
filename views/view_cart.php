@@ -1,3 +1,15 @@
+<?php
+if ($user) {
+    $userName = $user->getFirstName();
+} else {
+    $userName = "Посетитель";
+}
+if (empty($cart)) {
+    $cartInfo = $userName . ", ваша корзина пуста";
+} else {
+    $cartInfo = $userName . ", оформите заказ";
+}
+?>
 <h1><?= $cartInfo ?></h1>
 <div class="cart">
     <form action="/cart/remove" method="post" class="form">
@@ -10,12 +22,14 @@
             <br>
         <?php endforeach; ?>
         <div class="btn_block">
-        <input class="btn-cart_invert" type=submit name="remove" value="Удалить">
-        <input class="btn-cart_invert" type=submit name="removeAll" value="Удалить все">
+            <input class="btn-cart_invert" type=submit name="remove" value="Удалить">
+            <a href="/cart/removeAll">
+                <button class="btn-cart_invert" type="button">Удалить все</button>
+            </a>
         </div>
     </form>
 </div>
-<div >
+<div>
     <a href="/order/add">
         <button class="btn-cart_invert" type="button">Оформить заказ</button>
     </a>

@@ -3,8 +3,7 @@
 
 namespace app\models;
 
-
-use app\services\Session;
+use app\base\App;
 
 class Cart
 {
@@ -13,7 +12,7 @@ class Cart
 
     public function __construct()
     {
-        $this->session= new Session();
+        $this->session= App::getInstance()->session;
         if (!$this->session->isSet('cart')) $this->session->set('cart', []);
         $this->cartContent = $this->session->get('cart');
     }

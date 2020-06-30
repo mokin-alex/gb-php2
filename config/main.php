@@ -1,3 +1,27 @@
 <?php
-define("ROOT_DIR", $_SERVER['DOCUMENT_ROOT'] . "/../");
-define("VIEWS_DIR", ROOT_DIR . "views/");
+return [
+    'rootDir' => __DIR__ . "/../",
+    'viewsDir' => __DIR__ . "/../views/",
+    'defaultController' => 'product',
+    'controllerNamespace' => 'app\controllers\\',
+    'components' => [
+        'connection' => [
+            'class' => \app\services\Db::class,
+            'driver' => 'mysql',
+            'host' => 'localhost',
+            'login' => 'root',
+            'password' => 'root',
+            'database' => 'june',
+            'charset' => 'utf8',
+        ],
+        'request' => [
+            'class' => \app\services\Request::class,
+        ],
+        'session' => [
+            'class' => \app\services\Session::class
+        ],
+        'renderer' => [
+            'class' => \app\services\renderers\TemplateRenderer::class
+        ]
+    ]
+];

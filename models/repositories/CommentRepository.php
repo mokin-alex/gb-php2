@@ -5,7 +5,6 @@ namespace app\models\repositories;
 
 
 use app\models\Comment;
-use app\services\Db;
 
 class CommentRepository extends Repository
 {
@@ -25,6 +24,6 @@ class CommentRepository extends Repository
     {
         $tableName = static::getTableName();
         $sql = "SELECT * FROM {$tableName} WHERE  product_id = :product_id";
-        return Db::getInstance()->queryAll(static::getRecordClass(), $sql, [':product_id' => $productId]);
+        return $this->db->queryAll(static::getRecordClass(), $sql, [':product_id' => $productId]);
     }
 }

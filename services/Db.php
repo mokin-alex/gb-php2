@@ -2,21 +2,23 @@
 
 namespace app\services;
 
-use app\traits\TSingleton;
 use PDO;
 
 class Db
 {
-    use TSingleton;
+    protected $config;
 
-    private $config = [
-        'driver' => 'mysql',
-        'host' => 'localhost',
-        'login' => 'root',
-        'password' => 'root',
-        'database' => 'june',
-        'charset' => 'utf8',
-    ];
+    public function __construct($driver, $host, $login, $password, $database, $charset)
+    {
+        $this->config = [
+            'driver' => $driver,
+            'host' => $host,
+            'login' => $login,
+            'password' => $password,
+            'database' => $database,
+            'charset' => $charset
+        ];
+    }
 
     /**
      * @var PDO

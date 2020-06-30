@@ -4,30 +4,25 @@ namespace app\controllers;
 
 use app\models\repositories\UserRepository;
 use app\models\User;
-use app\services\Request;
 
 class AuthController extends Controller
 {
     public function actionLogin()
     {
-        if ($this->currentUser) {
-            $login_msg = $this->currentUser->getFirstName() . ", вы авторизованы!";
-        } else {
-            $login_msg = "Вы не авторизованы! Введите логин и пароль";
-        }
-        $request = new Request();
-        if ($request->isPost()) {
-            $login = $request->cleanPost('login');
-            $password = $request->cleanPost('password');
+
+        if ($this->request->isPost()) {
+            $login = $this->request->cleanPost('login');
+            $password = $this->request->cleanPost('password');
             $user = (new UserRepository())->getUserByLogin($login);
             if ($user && $user->getPassword() == User::getHash($password)) {
                 $this->session->set('user_id', $user->getId());
-                if ($user->getIsAdm()) $this->redirect('/auth/manage');
+                if ($user->getIsAdm()) {
+                    $this->redirect('/auth/manage');
+                }
             }
             $this->redirect('/auth/login');
         }
-
-        echo $this->render('view_login', ['login_msg' => $login_msg]);
+        echo $this->render('view_login', ['user' => $this->currentUser]);
     }
 
     public function actionLogout()

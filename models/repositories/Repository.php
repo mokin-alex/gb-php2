@@ -4,8 +4,8 @@
 namespace app\models\repositories;
 
 
+use app\base\App;
 use app\models\Record;
-use app\services\Db;
 
 abstract class Repository
 {
@@ -13,7 +13,7 @@ abstract class Repository
 
     public function __construct()
     {
-        $this->db = Db::getInstance();
+        $this->db = App::getInstance()->connection;
     }
 
     abstract public function getRecordClass(): string;
@@ -22,14 +22,14 @@ abstract class Repository
     {
         $tableName = static::getTableName();
         $sql = "SELECT * FROM {$tableName} WHERE id = :id";
-        return Db::getInstance()->queryOne($this->getRecordClass(), $sql, [':id' => $id]);
+        return $this->db->queryOne($this->getRecordClass(), $sql, [':id' => $id]);
     }
 
     public function getAll(): array
     {
         $tableName = static::getTableName();
         $sql = "SELECT * FROM {$tableName}";
-        return Db::getInstance()->queryAll($this->getRecordClass(), $sql);
+        return $this->db->queryAll($this->getRecordClass(), $sql);
     }
 
     public function insert(Record $record)

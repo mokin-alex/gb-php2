@@ -1,6 +1,6 @@
 {
   "name": "vendor_name/gb-php2",
-  "description": "description",
+  "description": "GB php2 homework",
   "minimum-stability": "stable",
   "license": "proprietary",
   "authors": [
@@ -11,5 +11,10 @@
   ],
   "require": {
     
+  },
+  "autoload": {
+    "psr-4": {
+      "app\\" : "./"
+    }
   }
 }

@@ -3,11 +3,11 @@
 namespace app\controllers;
 
 use app\models\Cart;
+use app\models\Order;
 use app\models\OrderProducts;
 use app\models\repositories\OrderProductsRepository;
 use app\models\repositories\OrderRepository;
 use app\models\repositories\ViewOrderRepository;
-use app\services\Request;
 
 class OrderController extends Controller
 {
@@ -38,37 +38,35 @@ class OrderController extends Controller
 
     public function actionAdd()
     {
-        if (!$this->currentUser) $this->redirect('/auth/login');
+        if (!$this->currentUser) {
+            $this->redirect('/auth/login');
+        }
         $order = new Order();
+        $order->setUserId($this->currentUser->getId());
         (new OrderRepository())->save($order);
         $cart = (new Cart())->getCartContent();
-        foreach ($cart as $prod => $itm) {
-            $orderProduct = new OrderProducts();
-            $orderProduct->setOrderId($order->getId());
-            $orderProduct->setProductId($cart[$prod]['id']);
-            $orderProduct->setQuantity($cart[$prod]['quantity']);
-            (new OrderProductsRepository())->save($orderProduct);
-        }
+        $order->addProductsToOrder($cart);
         $this->redirect('/order');
     }
 
     public function actionUpdate()
     {
-        if (!$this->currentUser) $this->redirect('/auth/login');
-        $request = new Request();
-        if ($request->isPost()) {
-            $orderIds = $request->dirtyPost('order_item');
+        if (!$this->currentUser) {
+            $this->redirect('/auth/login');
+        }
+        if ($this->request->isPost()) {
+            $orderIds = $this->request->dirtyPost('order_item');
 
-            if ($this->session->isSet('pay')) {
+            if ($this->request->isSet('pay')) {
                 (new OrderRepository())->setOrderStatus($orderIds, ORDER_PAYED); //Оплачен заказ
             }
-            if ($this->session->isSet('cancel')) {
+            if ($this->request->isSet('cancel')) {
                 (new OrderRepository())->setOrderStatus($orderIds, ORDER_CANCEL); //отмена заказа
             }
-            if ($this->session->isSet('close')) {
+            if ($this->request->isSet('close')) {
                 (new OrderRepository())->setOrderStatus($orderIds, ORDER_CLOSED); //закрыть заказ как законченный
             }
-            if ($this->session->isSet('delivery')) {
+            if ($this->request->isSet('delivery')) {
                 (new OrderRepository())->setOrderStatus($orderIds, ORDER_DELIVERED); //заказ доставлен
             }
         }

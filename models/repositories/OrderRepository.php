@@ -5,7 +5,6 @@ namespace app\models\repositories;
 
 
 use app\models\Order;
-use app\services\Db;
 
 class OrderRepository extends Repository
 {
@@ -25,6 +24,6 @@ class OrderRepository extends Repository
         $tableName = static::getTableName();
         $in = implode(", ", $orderIds);
         $sql = "UPDATE {$tableName} SET status = :status WHERE id IN (:in)";
-        return Db::getInstance()->execute($sql, [':status' => $status, ':in' => $in]);
+        return $this->db->execute($sql, [':status' => $status, ':in' => $in]);
     }
 }

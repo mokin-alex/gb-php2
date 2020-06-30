@@ -2,9 +2,10 @@
 
 namespace app\controllers;
 
+use app\base\App;
+use app\exceptions\PageNotFoundException;
 use app\interfaces\IRender;
 use app\models\repositories\UserRepository;
-use app\services\Session;
 
 abstract class Controller
 {
@@ -15,12 +16,14 @@ abstract class Controller
     /** @var IRender */
     protected $renderer;
     protected $session;
+    protected $request;
     public $currentUser;
 
     public function __construct(IRender $renderer)
     {
         $this->renderer = $renderer;
-        $this->session = new Session();
+        $this->session = App::getInstance()->session;
+        $this->request = App::getInstance()->request;
         $this->currentUser = $this->getCurrentUser();
     }
 
@@ -31,7 +34,8 @@ abstract class Controller
         if (method_exists($this, $method)) {
             $this->$method();
         } else {
-            echo $this->render('view_404');
+            echo $this->render("view_404");
+            //throw new PageNotFoundException("страница не найдена!");
         }
     }
 

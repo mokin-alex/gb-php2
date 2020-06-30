@@ -1,3 +1,10 @@
+<?php
+        if ($user) {
+            $login_msg = $user->getFirstName() . ", вы авторизованы!";
+        } else {
+            $login_msg = "Вы не авторизованы! Введите логин и пароль";
+        }
+?>
 <h3><?= $login_msg ?> </h3>
 <form action="" method="post" class="form">
     <input type="text" name="login">

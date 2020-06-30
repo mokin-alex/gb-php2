@@ -9,7 +9,6 @@ use app\models\Product;
 use app\models\repositories\CommentRepository;
 use app\models\repositories\ProductRepository;
 use app\services\LoadImageFile;
-use app\services\Request;
 
 class ProductController extends Controller
 {
@@ -22,19 +21,21 @@ class ProductController extends Controller
 
     public function actionCard()
     {
-        $request = new Request();
-        $id = (int)$request->cleanGet('id');
+        $id = (int)$this->request->cleanGet('id');
         $model = (new ProductRepository())->getById($id);
         $listComments = (new CommentRepository())->getCommentsByProductId($model->getId());
-        echo $this->render('view_product', ['model' => $model, 'listComments' => $listComments]);
+        if ($this->currentUser && $this->currentUser->getIsAdm()) {
+            echo $this->render('view_upd_product', ['model' => $model, 'listComments' => $listComments]);
+        } else {
+            echo $this->render('view_product', ['model' => $model, 'listComments' => $listComments]);
+        }
     }
 
     public function actionBuy()
     {
-        $request = new Request();
-        $id = (int)$request->cleanGet('id');
-        if ($request->isPost()) {
-            $quantity = $request->cleanPost('quantity');
+        $id = (int)$this->request->cleanGet('id');
+        if ($this->request->isPost()) {
+            $quantity = $this->request->cleanPost('quantity');
             if ($quantity > 0) {
                 $cart = new Cart();
                 $cart->add(['id' => $id, 'quantity' => $quantity]);
@@ -48,10 +49,9 @@ class ProductController extends Controller
     public function actionComment()
     {
         $minCommentLength = 3;
-        $request = new Request();
-        $id = (int)$request->cleanGet('id');
-        if ($request->isPost()) {
-            $comment = $request->cleanPost('comment');
+        $id = (int)$this->request->cleanGet('id');
+        if ($this->request->isPost()) {
+            $comment = $this->request->cleanPost('comment');
             if (strlen($comment) > $minCommentLength) {
                 $model = new Comment($id, $comment);
                 (new CommentRepository())->save($model);
@@ -63,14 +63,13 @@ class ProductController extends Controller
     public function actionAdd()
     {
         //добавление нового товара
-        $request = new Request();
-        if ($request->isPost()) {
+        if ($this->request->isPost()) {
             $file = new LoadImageFile('my_file');
             if ($file->isReady) {
                 $product = new Product();
-                $product->setName($request->cleanPost('name'));
-                $product->setDescription($request->cleanPost('description'));
-                $product->setPrice($request->dirtyPost('price'));
+                $product->setName($this->request->cleanPost('name'));
+                $product->setDescription($this->request->cleanPost('description'));
+                $product->setPrice($this->request->dirtyPost('price'));
                 $product->setImageData($file->getImageData());
                 $product->setImageType($file->getImageType());
                 (new ProductRepository())->save($product);
@@ -83,6 +82,23 @@ class ProductController extends Controller
         } else {
             $this->redirect('/auth/login');
         }
+    }
 
+    public function actionUpdate()
+    {
+        $id = (int)$this->request->cleanGet('id');
+        $product = (new ProductRepository())->getById($id);
+        if ($this->request->isPost()) {
+            $product->setName($this->request->cleanPost('name'));
+            $product->setDescription($this->request->cleanPost('description'));
+            $product->setPrice($this->request->dirtyPost('price'));
+            $file = new LoadImageFile('my_file');
+            if ($file->isReady) {
+                $product->setImageData($file->getImageData());
+                $product->setImageType($file->getImageType());
+            }
+            (new ProductRepository())->save($product);
+        }
+        $this->redirect("/product/card?id=$id");
     }
 }
