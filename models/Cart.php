@@ -41,6 +41,7 @@ class Cart
      */
     public function getCartContent()
     {
+        $this->cartContent = $this->session->get('cart');
         return $this->cartContent;
     }
 }
